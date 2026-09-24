@@ -156,7 +156,7 @@ downcasting. After the cast, Cat-specific methods like `meow()` can be called (L
 5. **Null handling:** `x.equals(null)` must return false
 
 **The hashCode() Contract:**
-1. **Consistency:** the same object must return the same hashCode during execution
+1. **Consistency:** repeated calls return the same hashCode as long as no information used by `equals()` changes
 2. If `equals()` returns true, `hashCode()` must return the same value
 3. If `equals()` returns false, `hashCode()` can return the same value (collision is allowed)
 
