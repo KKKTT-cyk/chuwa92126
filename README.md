@@ -86,6 +86,7 @@ Updated automatically by [`.github/workflows/submissions.yml`](.github/workflows
 | IShinji | Hongquan Zou | hw1 | open | 2026-09-24 23:45:07 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/12) |
 | iychi | Iyu Lin | hw2 | open | 2026-09-25 01:22:56 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/15) |
 | jane0x5a | Jie Zhang | hw1 | open | 2026-09-24 00:44:49 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/3) |
+| jane0x5a | Jie Zhang | hw2 | open | 2026-09-28 18:40:49 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/27) |
 | lantshoe | Jie Yu | hw1 | open | 2026-09-24 02:59:21 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/6) |
 | MarlonZhang | Xudong Zhang | hw2 | open | 2026-09-25 00:13:40 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/14) |
 | mimidamimi | Meixin Wu | hw1 | open | 2026-09-23 18:56:02 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/2) |
