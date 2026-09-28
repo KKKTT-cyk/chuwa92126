@@ -80,6 +80,7 @@ Updated automatically by [`.github/workflows/submissions.yml`](.github/workflows
 | Ericsayhelloworld | Sicheng Xue | hw2 | open | 2026-09-25 19:05:38 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/16) |
 | Ericsayhelloworld | Sicheng Xue | hw3 | open | 2026-09-28 18:19:35 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/26) |
 | esteng24 | Chenye Wu | hw1 | open | 2026-09-24 23:13:26 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/11) |
+| esteng24 | Chenye Wu | hw2 | open | 2026-09-28 21:16:59 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/32) |
 | esteng24 | Chenye Wu | hw3 | open | 2026-09-28 21:06:06 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/29) |
 | Irenezhangtt | Yutong Zhang | hw1 | open | 2026-09-25 21:13:59 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/19) |
 | Irenezhangtt | Yutong Zhang | hw2 | open | 2026-09-25 21:12:59 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/18) |
