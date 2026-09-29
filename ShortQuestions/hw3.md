@@ -21,9 +21,9 @@ final :Comparator<String> comparatpr = (s1, s2) -> s1.length() - s2.length();
 Question 4. Which of the following lambda expressions are valid? For invalid ones, explain the reason.
 // A
 Runnable r = () -> System.out.println("Running");
-// B
+// B invalid
 Predicate<String> p = s -> return s.isEmpty(); // can not return without {}
-// C
+// C invalid
 Function<Integer, Integer> f = x -> { x * 2; }; // has to return in {}
 // D
 Consumer<String> c = (String s) -> System.out.println(s);
