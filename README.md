@@ -90,6 +90,7 @@ Updated automatically by [`.github/workflows/submissions.yml`](.github/workflows
 | Irenezhangtt | Yutong Zhang | hw1 | open | 2026-09-25 21:13:59 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/19) |
 | Irenezhangtt | Yutong Zhang | hw2 | open | 2026-09-25 21:12:59 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/18) |
 | Irenezhangtt | Yutong Zhang | hw3 | open | 2026-09-26 21:10:03 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/21) |
+| Irenezhangtt | Yutong Zhang | hw4 | open | 2026-10-02 00:30:41 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/60) |
 | IShinji | Hongquan Zou | hw1 | open | 2026-09-24 23:45:07 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/12) |
 | IShinji | Hongquan Zou | hw2 | open | 2026-09-28 23:19:06 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/39) |
 | IShinji | Hongquan Zou | hw3 | open | 2026-09-29 00:07:00 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/41) |
