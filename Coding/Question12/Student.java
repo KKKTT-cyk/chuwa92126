@@ -1,0 +1,27 @@
+package Coding.Question12;
+
+import java.util.List;
+
+public class Student {
+    private String id;
+    private String name;
+    private int age;
+    private String major;
+    private List<Double> scores;
+
+    public Student(String id, String name, int age, String major, List<Double> scores) {
+        this.id = id;
+        this.name = name;
+        this.age = age;
+        this.major = major;
+        this.scores = scores;
+    }
+    public String getId(){return id;}
+    public int getAge(){return age;}
+    public String getName() { return name; }
+    public String getMajor() { return major; }
+    public List<Double> getScores() { return scores; }
+
+    @Override
+    public String toString() { return name; }
+}
