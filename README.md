@@ -138,6 +138,7 @@ Updated automatically by [`.github/workflows/submissions.yml`](.github/workflows
 | siwenwu24 | Siwen Wu | hw4 | open | 2026-10-05 23:36:06 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/75) |
 | siwenwu24 | Siwen Wu | hw5 | open | 2026-10-07 04:53:24 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/80) |
 | siwenwu24 | Siwen Wu | hw6 | open | 2026-10-07 05:57:18 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/81) |
+| siwenwu24 | Siwen Wu | hw7 | open | 2026-10-09 22:18:51 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/97) |
 | tiffiong | Tiffany Iong | hw1 | open | 2026-09-23 14:04:37 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/1) |
 | tiffiong | Tiffany Iong | hw2 | open | 2026-09-28 16:13:54 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/25) |
 | tiffiong | Tiffany Iong | hw3 | open | 2026-10-01 21:41:11 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/55) |
