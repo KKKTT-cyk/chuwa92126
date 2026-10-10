@@ -1,4 +1,4 @@
-# HW5 – Database
+# HW5 – Database and API Design
 
 ---
 
@@ -143,3 +143,62 @@ HAVING COUNT(student) >= 5;
 ```
 
 ![596](hw5/596.png)
+
+---
+
+# API Design
+
+---
+
+## Question 1. 
+
+GraphQL is an alternative API style that lets clients request specific fields through a strongly defined schema. Clients send queries (to read) and mutations (to write), usually to a single endpoint, and the server returns exactly the fields that were asked for.
+
+---
+
+## Question 2. 
+
+Different clients may need different views of the same data. For example, a mobile order screen may need only the order status and user name, while an admin portal needs much more. With REST the server defines the response shape, so clients either receive fields they do not need or must call several resource URLs to assemble one screen. GraphQL lets the client select the fields it needs in one request, and its strong schema gives tooling and introspection for frontends with varied data needs.
+
+---
+
+## Question 3. 
+
+1. Define a schema: the types, fields, queries, and mutations the API supports.
+2. Implement resolvers on the server that fetch the data for each field.
+3. The client sends a query (read) or a mutation (write) to the single GraphQL endpoint and lists the fields it wants.
+4. The server returns JSON with the same shape as the query.
+
+```graphql
+query {
+  order(id: 123) {
+    status
+    user {
+      name
+    }
+  }
+}
+```
+
+Considerations:
+
+- A small query can trigger expensive backend work.
+- Authorization must be enforced for types and fields.
+- Nested resolvers can cause the N+1 problem: one query for orders, then one query per order's user or items. Use batching and request-scoped loaders.
+- Use query-depth limits and cost limits.
+
+---
+
+## Question 4. 
+
+| REST | GraphQL |
+| --- | --- |
+| Many resource URLs | Commonly one endpoint |
+| Server defines response shape | Client selects fields |
+| Uses HTTP methods/status semantics directly | Uses queries and mutations |
+| Straightforward HTTP caching | Field/query-aware caching is more involved |
+| Simple operational model | Flexible but adds query complexity |
+
+REST strengths: simple mental model and HTTP semantics, easy observability and caching, common for service-to-service APIs.
+
+GraphQL strengths: flexible client-selected fields, strong schema, tooling, and introspection, useful for frontends with varied data needs.
