@@ -133,6 +133,7 @@ Updated automatically by [`.github/workflows/submissions.yml`](.github/workflows
 | mimidamimi | Meixin Wu | hw4 | open | 2026-10-03 20:09:20 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/62) |
 | mimidamimi | Meixin Wu | hw5 | open | 2026-10-06 22:35:44 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/78) |
 | mimidamimi | Meixin Wu | hw6 | open | 2026-10-09 23:26:40 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/98) |
+| mimidamimi | Meixin Wu | hw7 | open | 2026-10-10 06:12:13 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/99) |
 | siwenwu24 | Siwen Wu | hw1 | open | 2026-09-29 00:41:39 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/48) |
 | siwenwu24 | Siwen Wu | hw2 | open | 2026-09-29 00:26:25 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/44) |
 | siwenwu24 | Siwen Wu | hw3 | open | 2026-09-29 00:24:32 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/43) |
