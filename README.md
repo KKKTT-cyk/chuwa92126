@@ -173,6 +173,7 @@ Updated automatically by [`.github/workflows/submissions.yml`](.github/workflows
 | YiboDing1998 | Yibo Ding | hw4 | open | 2026-10-01 20:52:51 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/54) |
 | YiboDing1998 | Yibo Ding | hw5 | open | 2026-10-05 22:27:15 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/70) |
 | YiboDing1998 | Yibo Ding | hw6 | open | 2026-10-07 07:57:38 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/82) |
+| YiboDing1998 | Yibo Ding | hw7 | open | 2026-10-12 22:55:29 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/110) |
 | zhengyicoding | Zhengyi Xu | hw1 | open | 2026-09-24 17:06:57 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/9) |
 | zhengyicoding | Zhengyi Xu | hw2 | open | 2026-09-26 03:39:56 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/20) |
 | zhengyicoding | Zhengyi Xu | hw3 | open | 2026-09-28 21:30:53 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/33) |
