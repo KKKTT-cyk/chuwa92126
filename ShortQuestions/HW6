@@ -1,0 +1,8 @@
+1. Factory Method vs. Abstract Factory
+Factory Method creates a single product through a method that subclasses override to choose the concrete product. For example, CarFactory creates a Car.
+Abstract Factory creates a family of related products designed to work together. For example, a WindowsUIFactory creates matching Windows buttons and checkboxes, while a MacUIFactory creates matching Mac components.
+
+2. Telescoping Constructors and Builder
+Telescoping constructors are overloaded constructors with increasing numbers of parameters. They are difficult to use because long argument lists are hard to read, parameters of the same type can be accidentally swapped, and optional parameters may require many overloads or placeholder values.
+The Builder pattern solves this by using named methods to configure an object step by step, followed by build() to create it. This makes the code easier to understand and supports default values and validation.
+For example: new User.Builder("Eric").age(34).email("eric@example.com").build().
