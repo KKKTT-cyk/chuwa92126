@@ -184,6 +184,7 @@ Updated automatically by [`.github/workflows/submissions.yml`](.github/workflows
 | VincentSWH | Weihan Song | hw8 | open | 2026-10-13 13:57:16 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/116) |
 | VincentSWH | Weihan Song | hw9 | open | 2026-10-15 14:28:43 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/127) |
 | VincentSWH | Weihan Song | hw10 | open | 2026-10-16 15:41:46 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/134) |
+| VincentSWH | Weihan Song | hw11 | open | 2026-10-19 17:46:40 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/142) |
 | wdtt057 | Dengtai Wang | hw1 | open | 2026-09-24 03:41:29 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/7) |
 | wdtt057 | Dengtai Wang | hw2 | open | 2026-09-28 06:12:27 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/24) |
 | wdtt057 | Dengtai Wang | hw3 | open | 2026-09-28 22:06:16 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/36) |
