@@ -135,6 +135,7 @@ Updated automatically by [`.github/workflows/submissions.yml`](.github/workflows
 | IShinji | Hongquan Zou | hw10 | open | 2026-10-19 22:21:36 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/150) |
 | IShinji | Hongquan Zou | hw11 | open | 2026-10-27 03:34:39 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/189) |
 | IShinji | Hongquan Zou | hw12 | open | 2026-10-27 04:03:46 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/190) |
+| IShinji | Hongquan Zou | hw13 | open | 2026-10-27 04:41:29 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/191) |
 | iychi | Iyu Lin | hw1 | open | 2026-09-28 22:06:31 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/37) |
 | iychi | Iyu Lin | hw2 | open | 2026-09-28 22:27:42 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/38) |
 | iychi | Iyu Lin | hw3 | open | 2026-09-29 00:30:56 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/47) |
