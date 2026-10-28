@@ -173,6 +173,7 @@ Updated automatically by [`.github/workflows/submissions.yml`](.github/workflows
 | lantshoe | Jie Yu | hw9 | open | 2026-10-19 21:27:29 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/145) |
 | lantshoe | Jie Yu | hw10 | open | 2026-10-26 17:14:28 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/173) |
 | lantshoe | Jie Yu | hw11 | open | 2026-10-26 21:29:56 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/178) |
+| lantshoe | Jie Yu | hw12 | open | 2026-10-28 00:42:02 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/195) |
 | MarlonZhang | Xudong Zhang | hw2 | open | 2026-09-29 00:15:42 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/42) |
 | MarlonZhang | Xudong Zhang | hw4 | open | 2026-10-07 03:45:14 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/79) |
 | MarlonZhang | Xudong Zhang | hw6 | open | 2026-10-09 02:23:33 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/94) |
