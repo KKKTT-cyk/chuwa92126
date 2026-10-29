@@ -261,6 +261,7 @@ Updated automatically by [`.github/workflows/submissions.yml`](.github/workflows
 | YiboDing1998 | Yibo Ding | hw10 | open | 2026-10-22 06:23:28 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/160) |
 | YiboDing1998 | Yibo Ding | hw11 | open | 2026-10-27 01:21:48 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/187) |
 | YiboDing1998 | Yibo Ding | hw12 | open | 2026-10-29 09:27:59 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/201) |
+| YiboDing1998 | Yibo Ding | hw13 | open | 2026-10-29 23:33:04 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/205) |
 | zhengyicoding | Zhengyi Xu | hw1 | open | 2026-09-24 17:06:57 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/9) |
 | zhengyicoding | Zhengyi Xu | hw2 | open | 2026-09-26 03:39:56 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/20) |
 | zhengyicoding | Zhengyi Xu | hw3 | open | 2026-09-28 21:30:53 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/33) |
