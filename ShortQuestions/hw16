@@ -1,0 +1,1102 @@
+
+# Java Reactor Homework — Answers
+
+## 1. Why does the thread-per-request model waste resources for I/O-bound work?
+
+In the traditional thread-per-request model, each incoming HTTP request is assigned a dedicated thread. The thread handles the entire request, including database queries and external API calls.
+
+For example, consider the following timeline:
+
+```text
+Time       Thread                  Operation
+--------------------------------------------------
+0 ms       Thread-1                Receive HTTP request
+10 ms      Thread-1                Send database query
+10-210 ms  Thread-1 (BLOCKED)      Wait for database response
+210 ms     Thread-1                Process database result
+220 ms     Thread-1                Call external API
+220-720 ms Thread-1 (BLOCKED)      Wait for API response
+720 ms     Thread-1                Build HTTP response
+```
+
+During the database and external API calls, the thread spends most of its time waiting for I/O rather than performing useful CPU work.
+
+This wastes resources because:
+
+1. Each thread consumes memory for its stack and other runtime structures.
+2. A large number of concurrent requests requires many threads.
+3. Thread scheduling and context switching introduce overhead.
+4. Thread pools can become exhausted when many requests are waiting for I/O.
+
+For example, if 1,000 requests are simultaneously waiting for database responses, a traditional thread-per-request server may need up to 1,000 request-handling threads to support them concurrently.
+
+A reactive system uses non-blocking I/O. Instead of keeping a thread blocked while waiting, it registers an operation and allows the thread to process other events.
+
+When the database or external API responds, the system resumes processing through an event-driven callback.
+
+**Conclusion:** The thread-per-request model wastes resources for I/O-bound applications because threads remain occupied while waiting. Non-blocking I/O improves resource efficiency by allowing a smaller number of threads to handle many concurrent requests.
+
+---
+
+## 2. Describe the Reactor pattern and explain why blocking an event loop is harmful.
+
+The Reactor pattern is an event-driven architecture used to handle multiple I/O operations efficiently with a small number of threads.
+
+It contains four important components.
+
+### 1. Demultiplexer
+
+The demultiplexer monitors multiple I/O channels and detects which channels are ready for operations such as reading, writing, or accepting connections.
+
+Examples include:
+
+- Linux epoll
+- macOS/BSD kqueue
+- Java NIO Selector
+
+The demultiplexer allows one thread to monitor many connections.
+
+### 2. Event Loop
+
+The event loop continuously waits for I/O events and dispatches ready events to their corresponding handlers.
+
+```text
+while (running) {
+    events = demultiplexer.waitForEvents();
+
+    for (event : events) {
+        dispatch(event);
+    }
+}
+```
+
+The event loop should execute short, non-blocking operations.
+
+### 3. Acceptor
+
+The acceptor handles new incoming connections.
+
+When a server socket becomes ready, the acceptor accepts the connection and registers it for further I/O processing.
+
+### 4. Handlers
+
+Handlers process specific events, such as:
+
+- Incoming HTTP requests
+- Readable socket data
+- Writable socket data
+- Completed I/O operations
+
+### Why is blocking an event loop harmful?
+
+An event loop thread handles many connections.
+
+If one handler performs a blocking operation, the event loop cannot process other events until that operation finishes.
+
+For example:
+
+```java
+Mono<String> result = Mono.fromCallable(() -> {
+    Thread.sleep(5000);
+    return "Done";
+});
+```
+
+If this blocking operation is executed directly on an event loop thread, that thread may be blocked for five seconds.
+
+During this period, other requests assigned to the same event loop may experience delays.
+
+**Conclusion:** The Reactor pattern enables scalable I/O processing by dispatching events to handlers. Blocking an event loop is harmful because one slow operation can delay many unrelated connections.
+
+---
+
+## 3. What are the four Reactive Streams interfaces?
+
+The Reactive Streams specification defines four interfaces.
+
+### 1. Publisher<T>
+
+A Publisher produces data and sends it to subscribers according to their requested demand.
+
+```java
+Publisher<String> publisher;
+```
+
+### 2. Subscriber<T>
+
+A Subscriber receives data and lifecycle signals.
+
+It defines four methods:
+
+```java
+void onSubscribe(Subscription subscription);
+
+void onNext(T item);
+
+void onError(Throwable throwable);
+
+void onComplete();
+```
+
+### 3. Subscription
+
+A Subscription connects a Publisher and a Subscriber.
+
+It provides two methods:
+
+```java
+void request(long n);
+
+void cancel();
+```
+
+`request(n)` tells the Publisher that the Subscriber is ready to receive up to `n` additional elements.
+
+`cancel()` cancels the subscription.
+
+### 4. Processor<T, R>
+
+A Processor acts as both a Subscriber and a Publisher.
+
+It can receive elements, transform or process them, and publish results downstream.
+
+### Sequence of signals
+
+```text
+Subscriber                 Publisher
+    |                          |
+    |------ subscribe() ------>|
+    |                          |
+    |<----- onSubscribe() -----|
+    |                          |
+    |------ request(2) ------->|
+    |                          |
+    |<-------- onNext(A) ------|
+    |<-------- onNext(B) ------|
+    |                          |
+    |------ request(1) ------->|
+    |                          |
+    |<-------- onNext(C) ------|
+    |                          |
+    |<------ onComplete() -----|
+```
+
+A Publisher may send zero or more `onNext` signals, followed by either `onComplete` or `onError`.
+
+Only one terminal signal is allowed.
+
+### Role of request(n)
+
+`request(n)` implements backpressure.
+
+It prevents a Publisher from overwhelming a slower Subscriber by allowing the Subscriber to control how many items it is prepared to receive.
+
+**Conclusion:** The four interfaces are Publisher, Subscriber, Subscription, and Processor. The `request(n)` mechanism allows consumers to control demand and is central to Reactive Streams backpressure.
+
+---
+
+## 4. What is the difference between Mono and Flux?
+
+Project Reactor provides two main reactive types.
+
+### Mono<T>
+
+A Mono represents an asynchronous computation that produces:
+
+- Zero elements, followed by completion.
+- One element, followed by completion.
+- An error.
+
+Example:
+
+```java
+Mono<String> mono = Mono.just("Hello");
+```
+
+### Flux<T>
+
+A Flux represents an asynchronous sequence that can produce zero to many elements.
+
+Example:
+
+```java
+Flux<Integer> flux = Flux.just(1, 2, 3, 4, 5);
+```
+
+### Comparison
+
+| Feature | Mono | Flux |
+|---|---|---|
+| Number of elements | 0 or 1 | 0 to many |
+| Common use | Single result | Multiple results |
+| Example | Find one student | Find all students |
+| Completion | Success, empty, or error | Completion or error |
+
+### What does "nothing happens until you subscribe" mean?
+
+Most Reactor pipelines are lazy.
+
+Creating a pipeline usually does not start the underlying asynchronous operation.
+
+For example:
+
+```java
+Mono<String> mono =
+    Mono.fromSupplier(() -> {
+        System.out.println("Executing");
+        return "Hello";
+    });
+```
+
+At this point, the supplier has not executed.
+
+When we subscribe:
+
+```java
+mono.subscribe(System.out::println);
+```
+
+The supplier executes and emits its result.
+
+### Mono.just(buildReport())
+
+```java
+Mono<Report> mono = Mono.just(buildReport());
+```
+
+Java evaluates method arguments immediately.
+
+Therefore, `buildReport()` executes when this line runs, before subscription.
+
+The resulting Report object is stored in the Mono.
+
+### Mono.fromCallable(() -> buildReport())
+
+```java
+Mono<Report> mono =
+    Mono.fromCallable(() -> buildReport());
+```
+
+Here, the Callable is executed when a subscriber subscribes.
+
+Each subscription can invoke `buildReport()` again.
+
+This makes `fromCallable` useful for deferring work and propagating exceptions through reactive error signals.
+
+However, `fromCallable` does not automatically move blocking work to another thread.
+
+**Conclusion:** Mono emits at most one element, while Flux can emit multiple elements. `Mono.just()` evaluates its argument immediately, while `Mono.fromCallable()` defers execution until subscription.
+
+---
+
+## 5. Compare map, flatMap, concatMap, and flatMapSequential.
+
+These operators transform elements in a reactive pipeline, but they differ in how they handle asynchronous operations and ordering.
+
+### map
+
+`map` performs a synchronous one-to-one transformation.
+
+The mapping function returns a regular value rather than a Publisher.
+
+```java
+Flux.just(1, 2, 3)
+    .map(n -> n * 2)
+    .subscribe(System.out::println);
+```
+
+Output:
+
+```text
+2
+4
+6
+```
+
+`map` preserves the order of elements and does not independently introduce asynchronous concurrency.
+
+### flatMap
+
+`flatMap` transforms each element into a Publisher and merges the resulting inner Publishers.
+
+```java
+Flux.just(1, 2, 3)
+    .flatMap(n -> callExternalApi(n));
+```
+
+If the inner Publishers are asynchronous, multiple operations can be active concurrently.
+
+Results are emitted as they arrive, so the original order is not guaranteed.
+
+For example:
+
+```text
+Input:  1, 2, 3
+Output: 2, 3, 1
+```
+
+### concatMap
+
+`concatMap` also transforms each element into a Publisher.
+
+However, it subscribes to and processes inner Publishers sequentially.
+
+```java
+Flux.just(1, 2, 3)
+    .concatMap(n -> callExternalApi(n));
+```
+
+It waits for the current inner Publisher to finish before subscribing to the next one.
+
+This preserves output order but can reduce concurrency.
+
+### flatMapSequential
+
+`flatMapSequential` subscribes to multiple inner Publishers eagerly, allowing concurrent operations.
+
+However, it buffers results when necessary to emit them in the original source order.
+
+```java
+Flux.just(1, 2, 3)
+    .flatMapSequential(n -> callExternalApi(n));
+```
+
+Even if request 3 finishes before request 1, its result waits until earlier results can be emitted.
+
+### Comparison
+
+| Operator | Function returns | Concurrent inner calls | Output order |
+|---|---|---|---|
+| map | Regular value | Not introduced by map | Preserved |
+| flatMap | Publisher | Yes, if asynchronous | Not guaranteed |
+| concatMap | Publisher | Sequential | Preserved |
+| flatMapSequential | Publisher | Yes, if asynchronous | Preserved |
+
+**Conclusion:** Use `map` for synchronous transformations, `flatMap` for concurrent asynchronous work, `concatMap` for sequential processing, and `flatMapSequential` for concurrent processing with ordered output.
+
+---
+
+## 6. Why does try/catch around pipeline construction not catch reactive errors?
+
+Reactive pipelines are usually executed later, when a subscriber subscribes.
+
+A try/catch around pipeline construction only catches exceptions thrown synchronously while constructing the pipeline.
+
+It does not catch errors emitted asynchronously during execution.
+
+For example:
+
+```java
+try {
+    Mono<Integer> mono =
+        Mono.fromCallable(() -> {
+            throw new RuntimeException("Database error");
+        });
+} catch (Exception e) {
+    System.out.println("Caught error");
+}
+```
+
+The exception is not thrown during pipeline construction.
+
+It occurs when the Mono is subscribed to.
+
+Reactor provides operators for handling these errors.
+
+### onErrorReturn
+
+Returns a fixed fallback value when an error occurs.
+
+```java
+Mono.just(10)
+    .map(n -> n / 0)
+    .onErrorReturn(-1);
+```
+
+If an error occurs, the Mono emits `-1`.
+
+### onErrorResume
+
+Switches to another Publisher when an error occurs.
+
+```java
+getProduct()
+    .onErrorResume(error -> getFallbackProduct());
+```
+
+This is useful when the fallback requires additional logic or another asynchronous operation.
+
+### onErrorMap
+
+Transforms an error into another exception.
+
+```java
+getProduct()
+    .onErrorMap(error ->
+        new RuntimeException("Product lookup failed", error));
+```
+
+This is useful for translating low-level exceptions into application-specific exceptions.
+
+### retryWhen
+
+Retries the upstream operation according to a retry policy.
+
+```java
+getProduct()
+    .retryWhen(
+        Retry.backoff(3, Duration.ofMillis(200))
+    );
+```
+
+This retries eligible failures up to three times, using exponential backoff.
+
+Retries can repeat side effects, so they should be used carefully.
+
+### timeout
+
+Applies a time limit to a reactive operation.
+
+```java
+getProduct()
+    .timeout(Duration.ofSeconds(2));
+```
+
+If the operation does not produce the required signal within the timeout, Reactor emits a timeout error.
+
+A fallback can be added:
+
+```java
+getProduct()
+    .timeout(Duration.ofSeconds(2))
+    .onErrorResume(error -> getFallbackProduct());
+```
+
+**Conclusion:** Reactive errors are delivered through error signals rather than ordinary synchronous exception propagation. Reactor provides operators such as `onErrorReturn`, `onErrorResume`, `onErrorMap`, `retryWhen`, and `timeout` to handle these errors.
+
+---
+
+## 7. What is the difference between publishOn and subscribeOn?
+
+Both operators control execution scheduling in Reactor.
+
+However, they affect different parts of the pipeline.
+
+### subscribeOn
+
+`subscribeOn` controls the Scheduler used for subscription and upstream source execution.
+
+Example:
+
+```java
+Mono.fromCallable(() -> blockingDatabaseCall())
+    .subscribeOn(Schedulers.boundedElastic());
+```
+
+This schedules the blocking call on a bounded elastic worker rather than executing it on the caller's thread.
+
+### publishOn
+
+`publishOn` changes the execution context for downstream operators.
+
+Example:
+
+```java
+Flux.just(1, 2, 3)
+    .publishOn(Schedulers.parallel())
+    .map(n -> n * 2);
+```
+
+The `map` operator downstream of `publishOn` runs on the selected Scheduler.
+
+### Comparison
+
+| Feature | subscribeOn | publishOn |
+|---|---|---|
+| Main purpose | Schedule subscription and upstream work | Switch downstream execution |
+| Typical placement | Near the source | At a desired execution boundary |
+| Common use | Blocking source isolation | Move downstream processing |
+
+### Which Scheduler should wrap blocking JDBC?
+
+Use:
+
+```java
+Schedulers.boundedElastic()
+```
+
+Example:
+
+```java
+Mono<Student> studentMono =
+    Mono.fromCallable(() ->
+        jdbcRepository.findStudentById(1L)
+    )
+    .subscribeOn(Schedulers.boundedElastic());
+```
+
+JDBC is traditionally blocking.
+
+Using `boundedElastic()` moves the blocking work away from event loop threads and uses a Scheduler designed to accommodate blocking operations.
+
+It does not make JDBC itself non-blocking.
+
+**Conclusion:** `subscribeOn` controls where subscription and source work execute, while `publishOn` switches execution for downstream operators. Blocking JDBC calls should generally be wrapped with `Mono.fromCallable()` and scheduled using `Schedulers.boundedElastic()`.
+
+---
+
+## 8. What is backpressure?
+
+Backpressure is a mechanism that prevents a fast producer from overwhelming a slower consumer.
+
+For example:
+
+```text
+Producer: 1000 items/second
+Consumer: 100 items/second
+```
+
+Without backpressure, the producer may generate data faster than the consumer can process it, potentially causing memory growth or resource exhaustion.
+
+### How does a Subscriber express demand?
+
+The Subscriber uses:
+
+```java
+subscription.request(n);
+```
+
+For example:
+
+```java
+subscription.request(10);
+```
+
+This tells the Publisher that the Subscriber is prepared to receive up to 10 additional elements.
+
+The Publisher should not emit more `onNext` signals than the total requested demand.
+
+### What if the source cannot slow down?
+
+Some sources, such as `Flux.interval`, generate events according to a schedule and cannot always pause their underlying event production.
+
+Reactor provides several strategies.
+
+### 1. onBackpressureBuffer
+
+Buffers items temporarily when downstream cannot keep up.
+
+```java
+flux.onBackpressureBuffer(100);
+```
+
+A bounded buffer limits how many pending items can be retained.
+
+Overflow behavior must be considered.
+
+### 2. onBackpressureDrop
+
+Drops items when downstream cannot keep up.
+
+```java
+flux.onBackpressureDrop();
+```
+
+Useful when older or excess events are not essential.
+
+### 3. onBackpressureLatest
+
+Keeps the most recent item while downstream is busy.
+
+```java
+flux.onBackpressureLatest();
+```
+
+Useful for rapidly changing values such as live metrics.
+
+### 4. onBackpressureError
+
+Terminates the sequence with an error when downstream demand is insufficient.
+
+```java
+flux.onBackpressureError();
+```
+
+### Special case: Flux.interval
+
+`Flux.interval` can emit an overflow error when a scheduled tick occurs without sufficient downstream demand.
+
+Backpressure operators can be used to choose an appropriate buffering or dropping strategy, subject to their placement and source behavior.
+
+**Conclusion:** Backpressure allows consumers to regulate demand. When a source cannot slow down, applications must choose whether to buffer, drop, retain the latest item, or fail.
+
+---
+
+## 9. What is the difference between cold and hot publishers?
+
+### Cold Publisher
+
+A cold Publisher starts its work independently for each subscriber.
+
+Each subscriber receives its own execution of the source.
+
+Example:
+
+```java
+Mono<String> mono =
+    Mono.fromSupplier(() -> {
+        System.out.println("Executing");
+        return "Hello";
+    });
+
+mono.subscribe();
+mono.subscribe();
+```
+
+Output:
+
+```text
+Executing
+Executing
+```
+
+The source executes twice.
+
+### Hot Publisher
+
+A hot Publisher can produce or share signals independently of individual subscriptions.
+
+Multiple subscribers may observe the same ongoing stream.
+
+Depending on the implementation and subscription timing, subscribers may miss previously emitted elements.
+
+### Why does subscribing twice to a WebClient Mono send two HTTP requests?
+
+Consider:
+
+```java
+Mono<String> response =
+    webClient.get()
+        .uri("/products/1")
+        .retrieve()
+        .bodyToMono(String.class);
+```
+
+The WebClient Mono is normally cold.
+
+Each subscription initiates a separate HTTP exchange:
+
+```java
+response.subscribe();
+response.subscribe();
+```
+
+Therefore, two subscriptions normally cause two HTTP requests.
+
+### cache()
+
+`cache()` stores the result of a subscription and replays it to later subscribers.
+
+```java
+Mono<String> cached =
+    webClient.get()
+        .uri("/products/1")
+        .retrieve()
+        .bodyToMono(String.class)
+        .cache();
+```
+
+Example:
+
+```java
+cached.subscribe();
+cached.subscribe();
+```
+
+The cached Mono shares the source execution and reuses the terminal result, so the two subscriptions normally result in one HTTP request.
+
+By default, `Mono.cache()` also caches empty completion and errors.
+
+### share()
+
+`share()` allows subscribers to share an underlying source subscription.
+
+For example:
+
+```java
+Flux<Long> shared =
+    Flux.interval(Duration.ofSeconds(1))
+        .share();
+```
+
+Multiple active subscribers can observe the same running source.
+
+Unlike `cache()`, `Flux.share()` does not generally replay the complete history to late subscribers.
+
+For a Mono, `Mono.share()` also shares a source subscription and has different lifecycle and caching behavior from `Flux.share()`.
+
+**Conclusion:** Cold publishers generally execute independently for each subscriber, while hot publishers share emissions or ongoing work. `cache()` replays a cached result, while `share()` primarily supports shared subscriptions.
+
+---
+
+## 10. Compare Spring MVC and Spring WebFlux.
+
+Spring MVC and Spring WebFlux are two web frameworks provided by Spring.
+
+### Spring MVC
+
+Spring MVC is traditionally based on the Servlet API and an imperative programming model.
+
+A typical controller looks like:
+
+```java
+@GetMapping("/students/{id}")
+public Student getStudent(@PathVariable Long id) {
+    return studentService.findById(id);
+}
+```
+
+The method returns a regular Java object.
+
+Traditional synchronous request processing commonly uses a thread-per-request model.
+
+Spring MVC works naturally with blocking technologies such as JDBC and JPA.
+
+### Spring WebFlux
+
+Spring WebFlux supports reactive programming and non-blocking I/O.
+
+A controller may return Mono or Flux.
+
+```java
+@GetMapping("/students/{id}")
+public Mono<Student> getStudent(
+        @PathVariable Long id) {
+
+    return studentService.findById(id);
+}
+```
+
+WebFlux is especially useful for applications with high concurrency and asynchronous I/O operations.
+
+It works naturally with reactive clients and drivers, such as WebClient and R2DBC.
+
+### Comparison
+
+| Feature | Spring MVC | Spring WebFlux |
+|---|---|---|
+| Programming model | Primarily imperative | Reactive |
+| Typical return type | Object, List | Mono, Flux |
+| I/O model | Commonly blocking | Supports non-blocking |
+| Database integration | JDBC, JPA | R2DBC, reactive drivers |
+| Learning curve | Lower | Higher |
+| Backpressure | Not central to MVC model | Supported through Reactive Streams |
+
+### When is Spring MVC with virtual threads a better choice?
+
+Java virtual threads allow applications to support many concurrent blocking operations without requiring a dedicated expensive platform thread for each request.
+
+Spring MVC with virtual threads can be a better choice when:
+
+1. The application already uses JDBC or JPA.
+2. Most code is written in an imperative style.
+3. The team wants to avoid rewriting the application using Mono and Flux.
+4. The application performs many blocking I/O operations.
+5. Simpler debugging and maintenance are important.
+
+For example:
+
+```java
+@GetMapping("/products/{id}")
+public Product getProduct(@PathVariable Long id) {
+    return productRepository.findById(id)
+        .orElseThrow();
+}
+```
+
+With virtual threads, blocking operations can often scale to higher concurrency while preserving straightforward synchronous code.
+
+However, virtual threads do not remove database connection limits or make blocking JDBC calls non-blocking.
+
+WebFlux may still be preferable when the application requires end-to-end non-blocking I/O, reactive streaming, or explicit backpressure handling.
+
+**Conclusion:** Spring MVC with virtual threads is often a practical choice for existing blocking applications, while WebFlux is useful for systems designed around non-blocking asynchronous processing.
+
+---
+
+## 11. Complete ProductPageService.productPage.
+
+### Requirements
+
+The method must:
+
+1. Call CatalogClient, InventoryClient, and ReviewClient concurrently.
+2. Combine their results into a ProductPage.
+3. Apply a two-second timeout to each call.
+4. Use an empty review list if the reviews call fails or times out.
+5. Use Stock.unknown(sku) if the stock call fails or times out.
+6. Propagate the error if the product call fails.
+7. Never block.
+
+### Complete solution
+
+```java
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
+import java.math.BigDecimal;
+import java.time.Duration;
+import java.util.List;
+
+record Product(
+    String sku,
+    String name,
+    BigDecimal price
+) {}
+
+record Stock(
+    String sku,
+    int available,
+    boolean known
+) {
+    static Stock unknown(String sku) {
+        return new Stock(sku, 0, false);
+    }
+}
+
+record Review(
+    String author,
+    int rating,
+    String text
+) {}
+
+record ProductPage(
+    Product product,
+    Stock stock,
+    List<Review> reviews
+) {}
+
+interface CatalogClient {
+    Mono<Product> getProduct(String sku);
+}
+
+interface InventoryClient {
+    Mono<Stock> getStock(String sku);
+}
+
+interface ReviewClient {
+    Flux<Review> getReviews(String sku);
+}
+
+class ProductPageService {
+
+    private final CatalogClient catalog;
+    private final InventoryClient inventory;
+    private final ReviewClient reviews;
+
+    ProductPageService(
+            CatalogClient catalog,
+            InventoryClient inventory,
+            ReviewClient reviews) {
+
+        this.catalog = catalog;
+        this.inventory = inventory;
+        this.reviews = reviews;
+    }
+
+    public Mono<ProductPage> productPage(String sku) {
+
+        Mono<Product> productMono =
+            Mono.defer(() -> catalog.getProduct(sku))
+                .timeout(Duration.ofSeconds(2));
+
+        Mono<Stock> stockMono =
+            Mono.defer(() -> inventory.getStock(sku))
+                .timeout(Duration.ofSeconds(2))
+                .onErrorResume(error ->
+                    Mono.just(Stock.unknown(sku))
+                );
+
+        Mono<List<Review>> reviewsMono =
+            Flux.defer(() -> reviews.getReviews(sku))
+                .timeout(Duration.ofSeconds(2))
+                .collectList()
+                .onErrorResume(error ->
+                    Mono.just(List.<Review>of())
+                );
+
+        return Mono.zip(
+            productMono,
+            stockMono,
+            reviewsMono
+        ).map(tuple -> new ProductPage(
+            tuple.getT1(),
+            tuple.getT2(),
+            tuple.getT3()
+        ));
+    }
+}
+```
+
+### Explanation
+
+#### Step 1: Fetch the product
+
+```java
+Mono<Product> productMono =
+    Mono.defer(() -> catalog.getProduct(sku))
+        .timeout(Duration.ofSeconds(2));
+```
+
+`catalog.getProduct(sku)` retrieves the product information.
+
+`Mono.defer()` delays invocation of the client method until subscription.
+
+`timeout(Duration.ofSeconds(2))` applies a two-second timeout.
+
+There is no fallback because the requirements specify that product errors must propagate.
+
+#### Step 2: Fetch stock information
+
+```java
+Mono<Stock> stockMono =
+    Mono.defer(() -> inventory.getStock(sku))
+        .timeout(Duration.ofSeconds(2))
+        .onErrorResume(error ->
+            Mono.just(Stock.unknown(sku))
+        );
+```
+
+If the inventory request succeeds, it returns the actual Stock.
+
+If it fails or times out, `onErrorResume` returns:
+
+```java
+Stock.unknown(sku)
+```
+
+This allows the product page to be returned even if stock information is unavailable.
+
+#### Step 3: Fetch reviews
+
+```java
+Mono<List<Review>> reviewsMono =
+    Flux.defer(() -> reviews.getReviews(sku))
+        .timeout(Duration.ofSeconds(2))
+        .collectList()
+        .onErrorResume(error ->
+            Mono.just(List.<Review>of())
+        );
+```
+
+`reviews.getReviews(sku)` returns a Flux of Review objects.
+
+`collectList()` collects all emitted reviews into a List and returns a Mono.
+
+If the reviews request fails or times out, the fallback returns an empty list.
+
+Note that `timeout(Duration.ofSeconds(2))` on a Flux applies a timeout between signals, rather than a strict two-second deadline for the entire review stream.
+
+If a strict two-second deadline for the complete reviews call is required, place `timeout` after `collectList()`:
+
+```java
+Mono<List<Review>> reviewsMono =
+    Flux.defer(() -> reviews.getReviews(sku))
+        .collectList()
+        .timeout(Duration.ofSeconds(2))
+        .onErrorReturn(List.<Review>of());
+```
+
+This second version is preferable for the homework requirement because it limits the total time spent collecting reviews.
+
+#### Step 4: Combine all three results
+
+```java
+return Mono.zip(
+    productMono,
+    stockMono,
+    reviewsMono
+).map(tuple -> new ProductPage(
+    tuple.getT1(),
+    tuple.getT2(),
+    tuple.getT3()
+));
+```
+
+`Mono.zip()` subscribes to the three Monos and combines their results when all three successfully emit values.
+
+For independent non-blocking clients, the operations can run concurrently.
+
+The tuple contains:
+
+- `getT1()` — Product
+- `getT2()` — Stock
+- `getT3()` — List of Reviews
+
+The `map()` operator converts the tuple into a ProductPage.
+
+### Important clarification
+
+For the strict two-second timeout requirement, the recommended final `reviewsMono` is:
+
+```java
+Mono<List<Review>> reviewsMono =
+    Flux.defer(() -> reviews.getReviews(sku))
+        .collectList()
+        .timeout(Duration.ofSeconds(2))
+        .onErrorReturn(List.<Review>of());
+```
+
+This ensures that the entire reviews operation must finish within two seconds, rather than allowing the timer to reset after each review.
+
+### Example execution
+
+Assume:
+
+```text
+Catalog API:   500 ms  -> Success
+Inventory API: 2500 ms -> Timeout
+Reviews API:   800 ms  -> Success
+```
+
+The result is:
+
+```java
+ProductPage(
+    product,
+    Stock.unknown(sku),
+    reviews
+)
+```
+
+The total response time is approximately two seconds rather than the sum of all three call durations, because the calls are concurrent.
+
+If the product call fails, the returned Mono fails with the product error instead of returning a ProductPage.
+
+### Why is this implementation non-blocking?
+
+The implementation uses Reactor operators:
+
+- `Mono.defer()`
+- `Flux.defer()`
+- `timeout()`
+- `onErrorResume()`
+- `collectList()`
+- `Mono.zip()`
+- `map()`
+
+It does not call:
+
+```java
+.block()
+```
+
+It also does not manually wait for results using Thread.sleep() or Future.get().
+
+The implementation remains non-blocking provided that the three clients themselves use non-blocking I/O.
+
+**Conclusion:** The solution uses Mono.zip to combine three concurrent client calls, applies per-call timeouts, handles optional-service failures with fallbacks, and propagates product failures without blocking.
+
+---
+
+
