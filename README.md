@@ -99,6 +99,7 @@ Updated automatically by [`.github/workflows/submissions.yml`](.github/workflows
 | Ericsayhelloworld | Sicheng Xue | hw12 | open | 2026-10-27 00:08:15 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/183) |
 | Ericsayhelloworld | Sicheng Xue | hw13 | open | 2026-10-27 19:15:14 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/194) |
 | Ericsayhelloworld | Sicheng Xue | hw14 | open | 2026-10-28 22:52:39 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/199) |
+| Ericsayhelloworld | Sicheng Xue | hw15 | open | 2026-11-03 00:06:48 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/222) |
 | esteng24 | Chenye Wu | hw1 | open | 2026-09-24 23:13:26 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/11) |
 | esteng24 | Chenye Wu | hw2 | open | 2026-09-28 21:16:59 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/32) |
 | esteng24 | Chenye Wu | hw3 | open | 2026-09-28 21:06:06 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/29) |
