@@ -190,6 +190,7 @@ Updated automatically by [`.github/workflows/submissions.yml`](.github/workflows
 | MarlonZhang | Xudong Zhang | hw6 | open | 2026-10-09 02:23:33 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/94) |
 | MarlonZhang | Xudong Zhang | hw7 | open | 2026-10-18 14:06:48 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/138) |
 | MarlonZhang | Xudong Zhang | hw11 | open | 2026-10-21 16:51:28 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/158) |
+| MarlonZhang | Xudong Zhang | hw12 | open | 2026-11-03 10:53:30 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/225) |
 | mimidamimi | Meixin Wu | hw1 | open | 2026-09-23 18:56:02 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/2) |
 | mimidamimi | Meixin Wu | hw2 | open | 2026-09-27 18:59:22 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/23) |
 | mimidamimi | Meixin Wu | hw3 | open | 2026-09-29 16:32:44 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/49) |
