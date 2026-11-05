@@ -175,6 +175,7 @@ Updated automatically by [`.github/workflows/submissions.yml`](.github/workflows
 | jane0x5a | Jie Zhang | hw14 | open | 2026-10-29 20:27:51 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/203) |
 | jane0x5a | Jie Zhang | hw15 | open | 2026-11-02 22:20:06 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/216) |
 | jane0x5a | Jie Zhang | hw16 | open | 2026-11-02 22:21:56 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/217) |
+| jane0x5a | Jie Zhang | hw17 | open | 2026-11-05 23:01:48 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/232) |
 | lantshoe | Jie Yu | hw1 | open | 2026-09-24 02:59:21 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/6) |
 | lantshoe | Jie Yu | hw2 | open | 2026-09-28 21:14:53 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/30) |
 | lantshoe | Jie Yu | hw3 | open | 2026-09-28 21:15:50 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/31) |
