@@ -1,0 +1,82 @@
+
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
+import java.math.BigDecimal;
+import java.time.Duration;
+import java.util.List;
+
+record Product(String sku, String name, BigDecimal price) { }
+
+record Stock(String sku, int available, boolean known) {
+    static Stock unknown(String sku) {
+        return new Stock(sku, 0, false);
+    }
+}
+
+record Review(String author, int rating, String text) { }
+
+record ProductPage(
+        Product product,
+        Stock stock,
+        List<Review> reviews
+) { }
+
+interface CatalogClient {
+    Mono<Product> getProduct(String sku);
+}
+
+interface InventoryClient {
+    Mono<Stock> getStock(String sku);
+}
+
+interface ReviewClient {
+    Flux<Review> getReviews(String sku);
+}
+
+class ProductPageService {
+
+    private final CatalogClient catalog;
+    private final InventoryClient inventory;
+    private final ReviewClient reviews;
+
+    ProductPageService(
+            CatalogClient catalog,
+            InventoryClient inventory,
+            ReviewClient reviews) {
+        this.catalog = catalog;
+        this.inventory = inventory;
+        this.reviews = reviews;
+    }
+
+    public Mono<ProductPage> productPage(String sku) {
+
+        Duration timeout = Duration.ofSeconds(2);
+
+        // Product is required. Propagate failures and timeouts.
+        Mono<Product> productMono =
+                catalog.getProduct(sku)
+                        .timeout(timeout);
+
+        // Stock is optional. Use unknown stock on failure.
+        Mono<Stock> stockMono =
+                inventory.getStock(sku)
+                        .timeout(timeout)
+                        .onErrorReturn(Stock.unknown(sku));
+
+        // Reviews are optional. Use an empty list on failure.
+        Mono<List<Review>> reviewsMono =
+                reviews.getReviews(sku)
+                        .collectList()
+                        .timeout(timeout)
+                        .onErrorReturn(List.of());
+
+        // Subscribe to all three publishers and combine results.
+        return Mono.zip(productMono, stockMono, reviewsMono)
+                .map(tuple -> new ProductPage(
+                        tuple.getT1(),
+                        tuple.getT2(),
+                        tuple.getT3()
+                ));
+    }
+}
