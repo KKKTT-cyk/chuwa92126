@@ -1,0 +1,45 @@
+## Data Access Homework
+
+### Dengtai Wang
+
+#### Conceptual Questions
+
+1. **什么是 ORM？**
+
+   ORM stands for Object-Relational Mapping. It maps Java objects to data in a relational database and converts database query results back into objects. In a basic mapping, a Java class corresponds to a database table, an object corresponds to one row, and a persistent field corresponds to a column. For example, the Student class maps to the students table, one Student object represents one student row, and its name field maps to the name column. Object references can represent relationships stored through foreign keys. ORM reduces the JDBC and result-mapping code we write, but SQL still exists: an ORM framework such as Hibernate generates and executes it according to the mappings.
+
+2. **JPA 和 Hibernate 有什么区别？**
+
+   JPA defines a standard for Java persistence. It specifies annotations such as @Entity and @Id, APIs such as EntityManager, the JPQL query language, and rules for managing persistent objects. Hibernate is a persistence framework that implements this standard. It reads entity mappings, generates SQL, maps query results to objects, tracks entity state, performs dirty checking and supports lazy loading. JPA describes the behavior a persistence provider must support, while Hibernate supplies the code that performs that work. Hibernate also offers features beyond the JPA standard, and other JPA implementations can be used instead.
+
+3. **Spring Data JPA 解决了什么问题？**
+
+   Spring Data JPA reduces repetitive repository code for common operations such as saving, finding and deleting entities. When we declare StudentRepository extends JpaRepository<Student, Long>, Student identifies the entity type and Long identifies its primary-key type. Spring Data creates a repository proxy at runtime and supplies standard method implementations, so we do not need to implement save() or findById() ourselves. It can also derive queries from appropriately named repository methods. The repository implementation uses JPA's EntityManager, and a JPA provider such as Hibernate performs the persistence work through JDBC. Therefore, Spring Data JPA is the repository abstraction, JPA is the persistence standard, and Hibernate is the provider implementing that standard. For a new entity, save() normally delegates to persist(); for an existing entity, it normally delegates to merge(). SQL execution may be deferred until flushing rather than occurring immediately when save() is called.
+
+4. **什么是 Entity？**
+
+   An entity is a Java object whose persistent state and identity are described by JPA mappings, usually representing a row in a database table. @Entity marks a class as a JPA entity. @Table(name = "students") specifies the table to which the class maps. @Id identifies the field or property that represents the entity's primary key. @GeneratedValue specifies that the identifier should be generated using a configured strategy, such as a database identity column or sequence. These annotations describe the mapping, but creating an object with new does not automatically save it or make it managed; it must enter a persistence context through an operation such as persist(), or be loaded by the persistence provider.
+
+5. **为什么 Entity 需要 primary key？**
+
+   A primary key gives each persistent entity a stable identity. It allows the database to distinguish rows and allows JPA to identify, track, update and relate entities correctly. @Id tells the persistence provider which field or property supplies that identity. When @GeneratedValue is used, the application may create an entity before its identifier has been generated. For example, with an identity column, the database generates the ID during insertion, so a new Student may initially have a null ID. A Long field can represent this missing value with null, while a primitive long defaults to 0. The exact generation time depends on the strategy: sequence-based identifiers can be allocated before insertion, and application-assigned identifiers must be supplied by application code.
+
+6. **为什么 Student 和 Course 之间需要 Enrollment？**
+
+   A student can take many courses, and a course can have many students, so the overall relationship is many-to-many. A simple @ManyToMany mapping is suitable when the association only links the two entities. However, an enrollment often has its own data and business lifecycle, so it is better represented as an association entity. Enrollment has a many-to-one relationship with Student and another many-to-one relationship with Course, with student_id and course_id stored in the enrollments table. Fields such as enrolledAt, enrollment status and grade belong in Enrollment because they describe one student's participation in one specific course, rather than the student or course alone. If the business allows only one enrollment per student-course pair, a unique constraint on those two foreign-key columns prevents duplicate relationships.
+
+7.  **什么是 owning side？**
+
+   Enrollment.student is the owning side of this relationship. The foreign-key column is student_id in the enrollments table, which references the Student primary key in the students table. @JoinColumn specifies this database column. Hibernate uses the value of Enrollment.student to determine which student identifier to write into student_id when it inserts or updates the relationship. In a bidirectional mapping, Student.enrollments is the inverse side when it uses mappedBy. Adding an enrollment only to that inverse collection does not set the owning reference and is not sufficient to establish the foreign key correctly. Application code should set enrollment.student and update the student's collection together so the database relationship and the in-memory object graph agree. Ownership does not itself save an object or enable cascading; the owning entity must also participate in the appropriate persistence operation.
+
+8. **mappedBy = "student" 表示什么？**
+
+   mappedBy = "student" declares that Student.enrollments is the inverse side of the relationship already mapped by Enrollment.student. Both Java properties describe the same association, and Enrollment.student owns it. Hibernate follows that owning property's mapping to use the existing enrollments.student_id foreign key instead of treating the collection as a separate relationship with another default join table. The value "student" names the Java association field in Enrollment because mappedBy refers to the object mapping. The database column name student_id belongs in @JoinColumn, which maps that Java reference to its database column. Writing mappedBy = "student_id" would incorrectly refer to a Java property that does not exist in this example. mappedBy does not choose the fetch strategy, enable cascading or automatically synchronize both sides of the relationship in memory.
+
+9.  **LAZY 和 EAGER 有什么区别？**
+
+   LAZY loading generally postpones fetching related data until it is accessed. For example, loading an Enrollment may leave its Course represented by a proxy, and accessing the course title can trigger another query. EAGER loading requires the related data to be fetched as part of loading the entity, whether or not the application needs it. EAGER does not necessarily mean that everything is fetched with one SQL join; the provider may issue additional queries. Making every relationship EAGER can load large object graphs, consume unnecessary memory, increase query counts and slow down simple requests. A better approach is to load only what each use case needs, using suitable fetch joins, entity graphs or projections. In JPA, LAZY is a hint while EAGER is a requirement, and accessing an unloaded relationship after its persistence context has closed can fail. LAZY also does not automatically prevent N+1 queries, so the query's fetch plan still matters.
+
+10. **⼀次请求是如何到达 database 的？**
+
+    An HTTP request such as GET /api/students/1/enrollments asks for the enrollments belonging to student 1. The Controller handles the route, reads studentId from the request and calls the Service. The Service applies business rules, coordinates repository calls and defines the transaction boundary when needed. It can also convert entities into response DTOs while the required data is available. The Repository provides the data-access method, such as findByStudentIdOrderByEnrolledAtDesc(studentId). Spring Data JPA interprets this method name as a query on enrollment.student.id, ordered by enrolledAt from newest to oldest, and executes it through JPA. Hibernate translates the mapping and query into SQL, approximately SELECT ... FROM enrollments WHERE student_id = ? ORDER BY enrolled_at DESC. JDBC provides the API and database driver used to bind parameters, send the SQL and read the result set. The Database executes the query and returns matching rows. Hibernate maps those rows to entity objects, the results return through the repository and service, and the controller returns an HTTP response, usually serialized as JSON. Additional SQL may be needed for related Student or Course data depending on the fetch plan.
