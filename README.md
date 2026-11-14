@@ -166,6 +166,7 @@ Updated automatically by [`.github/workflows/submissions.yml`](.github/workflows
 | iychi | Iyu Lin | hw15 | open | 2026-11-02 23:51:47 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/221) |
 | iychi | Iyu Lin | hw16 | open | 2026-11-05 21:48:33 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/229) |
 | iychi | Iyu Lin | hw17 | open | 2026-11-05 22:24:06 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/230) |
+| iychi | Iyu Lin | hw18 | open | 2026-11-14 01:00:11 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/256) |
 | jane0x5a | Jie Zhang | hw1 | open | 2026-09-24 00:44:49 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/3) |
 | jane0x5a | Jie Zhang | hw2 | open | 2026-09-28 18:40:49 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/27) |
 | jane0x5a | Jie Zhang | hw3 | open | 2026-09-28 18:41:50 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/28) |
