@@ -258,6 +258,7 @@ Updated automatically by [`.github/workflows/submissions.yml`](.github/workflows
 | tiffiong | Tiffany Iong | hw15 | open | 2026-11-02 04:55:13 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/214) |
 | tiffiong | Tiffany Iong | hw16 | open | 2026-11-05 22:53:05 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/231) |
 | tiffiong | Tiffany Iong | hw17 | open | 2026-11-12 00:24:03 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/248) |
+| tiffiong | Tiffany Iong | hw18 | open | 2026-11-16 21:44:10 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/260) |
 | VincentSWH | Weihan Song | hw1 | open | 2026-09-24 23:58:18 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/13) |
 | VincentSWH | Weihan Song | hw2 | open | 2026-09-28 21:40:53 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/34) |
 | VincentSWH | Weihan Song | hw3 | open | 2026-09-28 23:49:25 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/40) |
