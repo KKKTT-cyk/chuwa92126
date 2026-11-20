@@ -347,4 +347,5 @@ Updated automatically by [`.github/workflows/submissions.yml`](.github/workflows
 | zhengyicoding | Zhengyi Xu | hw17 | open | 2026-11-04 00:16:10 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/228) |
 | zhengyicoding | Zhengyi Xu | hw18 | open | 2026-11-10 19:49:55 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/245) |
 | zhengyicoding | Zhengyi Xu | hw19 | open | 2026-11-15 23:15:32 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/258) |
+| zhengyicoding | Zhengyi Xu | hw20 | open | 2026-11-20 22:07:11 | [link](https://github.com/KKKTT-cyk/chuwa92126/pull/277) |
 <!-- SUBMISSIONS:END -->
